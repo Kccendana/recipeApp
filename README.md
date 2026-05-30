@@ -69,7 +69,7 @@ Relationships:
 The application was developed using:
 
 - Visual Studio Code
-- MySQL Server (XAMPP / local MySQL)
+- MySQL Server 
 - Flask (Python web framework)
 - Jinja2 templating engine
 - Tailwind CSS for frontend styling

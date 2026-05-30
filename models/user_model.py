@@ -3,6 +3,7 @@ from config.database import get_db
 
 class UserModel:
 
+    # Create a new user
     @staticmethod
     def create_user(
         username,
@@ -30,6 +31,7 @@ class UserModel:
         conn.commit()
         conn.close()
 
+    # Get a user by email (used for login)
     @staticmethod
     def get_user_by_email(email):
 

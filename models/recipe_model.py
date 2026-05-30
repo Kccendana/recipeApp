@@ -3,6 +3,7 @@ from config.database import get_db
 
 class RecipeModel:
 
+    # Create a new recipe and return its ID
     @staticmethod
     def create_recipe(
         user_id,
@@ -42,6 +43,7 @@ class RecipeModel:
 
         return recipe_id
     
+    # Add instruction to a recipe
     @staticmethod
     def add_instruction(recipe_id, step_number, instruction_text):
 
@@ -65,6 +67,7 @@ class RecipeModel:
         conn.commit()
         conn.close()
 
+    # Add ingredient to a recipe
     @staticmethod
     def add_ingredient(recipe_id, ingredient_name, quantity, unit):
 
@@ -90,6 +93,7 @@ class RecipeModel:
         conn.commit()
         conn.close()
 
+    # Get all recipes for a specific user
     @staticmethod
     def get_all_by_user(user_id):
 
@@ -115,7 +119,7 @@ class RecipeModel:
 
         return recipes  
 
-
+    # Delete a recipe by ID
     @staticmethod
     def delete_recipe(recipe_id):
 
@@ -130,6 +134,7 @@ class RecipeModel:
         conn.commit()
         conn.close()
 
+    # Get a single recipe by ID, including category name
     @staticmethod
     def get_by_id(recipe_id):
 
@@ -137,9 +142,10 @@ class RecipeModel:
         cursor = conn.cursor(dictionary=True)
 
         cursor.execute("""
-            SELECT *
-            FROM recipes
-            WHERE recipe_id = %s
+            SELECT r.*, c.category_name
+            FROM recipes r
+            LEFT JOIN categories c ON r.category_id = c.category_id
+            WHERE r.recipe_id = %s
         """, (recipe_id,))
 
         recipe = cursor.fetchone()
@@ -147,6 +153,7 @@ class RecipeModel:
         conn.close()
         return recipe 
     
+    # Update a recipe's main details (title, category, description)
     @staticmethod
     def update_recipe(recipe_id, title, category_id, description):
 
@@ -164,6 +171,7 @@ class RecipeModel:
         conn.commit()
         conn.close()
     
+    # Delete all ingredients for a recipe
     @staticmethod
     def delete_ingredients(recipe_id):
         conn = get_db()
@@ -172,6 +180,7 @@ class RecipeModel:
         conn.commit()
         conn.close()
 
+    # Delete all instructions for a recipe
     @staticmethod
     def delete_instructions(recipe_id):
         conn = get_db()
@@ -180,6 +189,7 @@ class RecipeModel:
         conn.commit()
         conn.close()
     
+    # Get ingredients for a recipe
     @staticmethod
     def get_ingredients(recipe_id):
 
@@ -197,6 +207,7 @@ class RecipeModel:
 
         return ingredients
     
+    # Get instructions for a recipe
     @staticmethod
     def get_instructions(recipe_id):
 

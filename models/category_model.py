@@ -2,7 +2,7 @@ from config.database import get_db
 
 
 class CategoryModel:
-
+# Static method to get all categories
     @staticmethod
     def get_all_categories():
 

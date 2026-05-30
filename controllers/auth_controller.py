@@ -6,12 +6,13 @@ from flask import (
     session,
     flash
 )
-
+# Added imports for file handling and security
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash
 )
 
+# Import models
 from models.user_model import UserModel
 from models.category_model import CategoryModel
 from models.recipe_model import RecipeModel
@@ -20,13 +21,13 @@ auth_bp = Blueprint(
     __name__
 )
 
-
+# Registration route
 @auth_bp.route(
     "/register",
     methods=["GET", "POST"]
 )
-def register():
 
+def register():
     # Prevent logged-in users from registering again
     if "user_id" in session:
         return redirect("/dashboard")
@@ -71,7 +72,7 @@ def register():
         "register.html"
     )
 
-
+# Login route
 @auth_bp.route(
     "/login",
     methods=["GET", "POST"]
@@ -119,7 +120,7 @@ def login():
         "login.html"
     )
 
-
+# Dashboard route
 @auth_bp.route("/dashboard")
 def dashboard():
 
@@ -144,6 +145,7 @@ def dashboard():
         recipes=recipes
     )
 
+# Logout route
 @auth_bp.route("/logout")
 def logout():
 

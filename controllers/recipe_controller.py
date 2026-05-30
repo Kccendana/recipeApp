@@ -8,21 +8,24 @@ from flask import (
 )
 import os
 from werkzeug.utils import secure_filename
-
 from models.recipe_model import RecipeModel
 from models.category_model import CategoryModel
 
+# Blueprint for recipe-related routes
 recipe_bp = Blueprint(
     "recipe",
     __name__
 )
 
+# Route to handle recipe creation
 @recipe_bp.route("/recipes/add", methods=["POST"])
 def add_recipe():
 
+    # Ensure user is logged in
     if "user_id" not in session:
         return redirect("/login")
 
+    # Extract form data
     title = request.form["title"]
     category_id = request.form["category_id"]
     description = request.form["description"]
@@ -30,6 +33,7 @@ def add_recipe():
 
     image_url = None
 
+    # Handle image upload if a file was provided
     if image and image.filename != "":
 
         filename = secure_filename(image.filename)
@@ -40,7 +44,6 @@ def add_recipe():
         )
 
         image.save(filepath)
-
     image_url = filepath
 
     # Create recipe first
@@ -59,10 +62,12 @@ def add_recipe():
 
     for i in range(len(ingredient_names)):
 
+        # strip() to remove extra whitespace, and check if name is not empty
         name = ingredient_names[i].strip()
         qty = quantities[i].strip() if quantities[i] else None
         unit = units[i].strip() if units[i] else None
 
+        # Add ingredient if name is provided
         if name:
             RecipeModel.add_ingredient(
                 recipe_id,
@@ -74,6 +79,7 @@ def add_recipe():
     # INSTRUCTIONS
     instructions = request.form.getlist("instructions[]")
 
+    # Use step number starting from 1, and only add non-empty instructions
     step = 1
     for text in instructions:
         if text.strip():
@@ -84,6 +90,7 @@ def add_recipe():
 
     return redirect("/dashboard")
 
+# Route to handle recipe deletion
 @recipe_bp.route("/recipes/delete/<int:recipe_id>")
 def delete_recipe(recipe_id):
 
@@ -96,6 +103,7 @@ def delete_recipe(recipe_id):
 
     return redirect("/dashboard")
 
+# Route to show edit form
 @recipe_bp.route("/recipes/edit/<int:recipe_id>", methods=["GET"])
 def edit_recipe(recipe_id):
 
@@ -118,6 +126,10 @@ def edit_recipe(recipe_id):
 
 @recipe_bp.route("/recipes/update/<int:recipe_id>", methods=["POST"])
 def update_recipe(recipe_id):
+
+    # Ensure user is logged in
+    if "user_id" not in session:
+        return redirect("/login")
 
     title = request.form["title"]
     category_id = request.form["category_id"]

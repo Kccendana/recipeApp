@@ -14,7 +14,7 @@ Users can:
 
 The purpose of this software is to simulate a real-world recipe management system while improving my understanding of backend development, database design, authentication, and MVC architecture.
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Demo Video](https://www.loom.com/share/5e5e7a35d1b24448a3cffec1b072d99a)
 
 ---
 

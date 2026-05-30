@@ -153,14 +153,15 @@ Dashboard
     name="description"
     placeholder="Description"
     class="w-full border p-2 mb-3 rounded"
-    rows="4"></textarea>
+    rows="4" required></textarea>
 
         <!-- IMAGE (optional for now) -->
         <input
     type="file"
     name="image"
     accept="image/*"
-    class="w-full border p-2 mb-4 rounded">
+    class="w-full border p-2 mb-4 rounded"
+    required>
 
         <!-- INGREDIENTS -->
         <h4 class="font-semibold mb-2">Ingredients</h4>
@@ -173,18 +174,21 @@ Dashboard
             type="text"
             name="ingredient_name[]"
             placeholder="Ingredient (e.g. pork belly)"
-            class="w-1/2 border p-2 rounded">
+            class="w-1/2 border p-2 rounded"
+            required>
 
         <input
             type="number"
             step="0.01"
             name="quantity[]"
             placeholder="Qty"
-            class="w-1/4 border p-2 rounded">
+            class="w-1/4 border p-2 rounded"
+            required>
 
         <select
             name="unit[]"
-            class="w-1/4 border p-2 rounded">
+            class="w-1/4 border p-2 rounded"
+            required>
 
             <option value="">Unit</option>
             <option value="g">g</option>
@@ -219,7 +223,8 @@ Dashboard
                 type="text"
                 name="instructions[]"
                 placeholder="Step 1"
-                class="w-full border p-2 mb-2 rounded">
+                class="w-full border p-2 mb-2 rounded"
+                required>
         </div>
 
         <button

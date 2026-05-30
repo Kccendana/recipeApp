@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="bg-white p-6 rounded-xl shadow">
+
+<h2 class="text-2xl font-bold mb-6">
+    {% if is_edit %} Edit Recipe {% else %} Add Recipe {% endif %}
+</h2>
+
+<form method="POST"
+      enctype="multipart/form-data"
+      action="{% if is_edit %}/recipes/update/{{ recipe.recipe_id }}{% else %}/recipes/add{% endif %}"
+      class="space-y-4">
+
+    <!-- TITLE -->
+    <input type="text"
+           name="title"
+           value="{{ recipe.title if is_edit else '' }}"
+           placeholder="Recipe title"
+           class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-300">
+
+    <!-- CATEGORY -->
+    <select name="category_id"
+            class="w-full border p-3 rounded-lg">
+
+        <option value="">Select category</option>
+
+        {% for category in categories %}
+            <option value="{{ category.category_id }}"
+                {% if is_edit and recipe.category_id == category.category_id %}selected{% endif %}>
+                {{ category.category_name }}
+            </option>
+        {% endfor %}
+
+    </select>
+
+    <!-- DESCRIPTION -->
+    <textarea name="description"
+              placeholder="Description"
+              rows="3"
+              class="w-full border p-3 rounded-lg">{% if is_edit %}{{ recipe.description }}{% endif %}</textarea>
+
+    <!-- IMAGE -->
+    <div class="border rounded-lg p-3">
+
+        <p class="font-semibold mb-2">Recipe Image</p>
+
+        {% if is_edit and recipe.image_url %}
+            <img src="/{{ recipe.image_url }}"
+                 class="w-40 h-40 object-cover rounded mb-3">
+        {% endif %}
+
+        <input type="file"
+               name="image"
+               class="w-full">
+
+    </div>
+
+    <!-- INGREDIENTS -->
+    <div>
+        <h3 class="font-semibold mb-2">Ingredients</h3>
+
+        <div id="ingredients-container" class="space-y-2">
+
+            {% if is_edit %}
+
+                {% for ing in ingredients %}
+
+                <div class="grid grid-cols-3 gap-2">
+
+                    <input type="text"
+                           name="ingredient_name[]"
+                           value="{{ ing.ingredient_name }}"
+                           placeholder="Ingredient"
+                           class="border p-2 rounded">
+
+                    <input type="number"
+                           step="0.01"
+                           name="quantity[]"
+                           value="{{ ing.quantity }}"
+                           placeholder="Qty"
+                           class="border p-2 rounded">
+
+                    <input type="text"
+                           name="unit[]"
+                           value="{{ ing.unit }}"
+                           placeholder="Unit"
+                           class="border p-2 rounded">
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="grid grid-cols-3 gap-2">
+
+                    <input type="text" name="ingredient_name[]" placeholder="Ingredient"
+                           class="border p-2 rounded">
+
+                    <input type="number" name="quantity[]" placeholder="Qty"
+                           class="border p-2 rounded">
+
+                    <input type="text" name="unit[]" placeholder="Unit"
+                           class="border p-2 rounded">
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <button type="button"
+                onclick="addIngredientRow()"
+                class="text-blue-600 mt-2">
+            + Add Ingredient
+        </button>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <div>
+        <h3 class="font-semibold mb-2 mt-4">Instructions</h3>
+
+        <div id="instructions-container" class="space-y-2">
+
+            {% if is_edit %}
+
+                {% for ins in instructions %}
+<div class="flex gap-2 mb-2 instruction-row">
+
+    <input type="hidden"
+           name="instruction_id[]"
+           value="{{ ins.instruction_id }}">
+
+    <input type="text"
+           name="instructions[]"
+           value="{{ ins.instruction_text }}"
+           class="w-full border p-2 rounded">
+
+    <button type="button"
+            onclick="removeInstruction(this)"
+            class="text-red-500">
+        ✕
+    </button>
+
+</div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div>
+                    <input type="text"
+                           name="instructions[]"
+                           placeholder="Step 1"
+                           class="w-full border p-2 rounded">
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <button type="button"
+                onclick="addInstructionRow()"
+                class="text-blue-600 mt-2">
+            + Add Instruction
+        </button>
+    </div>
+
+    <!-- SUBMIT -->
+    <button type="submit"
+            class="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 transition">
+
+        {% if is_edit %}
+            Update Recipe
+        {% else %}
+            Save Recipe
+        {% endif %}
+
+    </button>
+
+</form>
+
+</div>
+<!-- JAVASCRIPT -->
+<script>
+function removeInstruction(btn) {
+    btn.parentElement.remove();
+}
+function addIngredientRow() {
+
+    const container = document.getElementById("ingredients-container");
+
+    const row = document.createElement("div");
+
+    row.className = "flex gap-2 mb-2";
+
+    row.innerHTML = `
+        <input type="text" name="ingredient_name[]" placeholder="Ingredient"
+               class="w-1/2 border p-2 rounded">
+
+        <input type="number" step="0.01" name="quantity[]" placeholder="Qty"
+               class="w-1/4 border p-2 rounded">
+
+        <input type="text" name="unit[]" placeholder="Unit"
+               class="w-1/4 border p-2 rounded">
+    `;
+
+    container.appendChild(row);
+}
+
+function addInstructionRow() {
+
+    const container = document.getElementById("instructions-container");
+
+    const row = document.createElement("div");
+
+    row.className = "mb-2";
+
+    row.innerHTML = `
+        <input type="text" name="instructions[]" placeholder="Step"
+               class="w-full border p-2 rounded">
+    `;
+
+    container.appendChild(row);
+}
+</script>
+
+{% endblock %}
